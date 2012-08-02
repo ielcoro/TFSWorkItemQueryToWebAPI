@@ -25,7 +25,7 @@ namespace TFSWorkItemQueryService.Repository
 
             var workItemStore = tfsServer.GetService<WorkItemStore>();
 
-
+            
         }
     }
 }
