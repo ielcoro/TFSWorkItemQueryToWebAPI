@@ -24,9 +24,30 @@ namespace TFSApiTests
 
             var text = ((QueryDefinition)item).QueryText;
 
-            var query = new Query(workItemStore, text);
+            var query = new Query(workItemStore, ReplaceMacros(text));
 
-            var results = query.RunLinkQuery();
+            var workItems = new List<WorkItem>();
+
+            if (query.IsLinkQuery)
+            {
+                var queryResults = query.RunLinkQuery();
+                
+                foreach (WorkItemLinkInfo i in queryResults)
+                {
+                    var wi = workItemStore.GetWorkItem(i.TargetId);
+                    workItems.Add(wi);
+                }
+            }
+            else
+            {
+                var queryResults = query.RunQuery();
+                foreach (WorkItem workitem in queryResults)
+                {
+                    workItems.Add(workitem);
+                }
+            }
+
+            Assert.IsTrue(workItems.Any());
         }
 
         private string ReplaceMacros(string queryText)
