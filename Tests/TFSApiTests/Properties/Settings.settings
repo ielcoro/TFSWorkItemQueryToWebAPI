@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TFSApiTests.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="QueryPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">YourQueryPath</Value>
+    </Setting>
+    <Setting Name="QueryName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">YourQueryName</Value>
+    </Setting>
+    <Setting Name="TfsAddress" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">YourTfsAddress</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

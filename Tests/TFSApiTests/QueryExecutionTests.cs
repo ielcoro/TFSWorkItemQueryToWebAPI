@@ -10,21 +10,17 @@ namespace TFSApiTests
     [TestClass]
     public class QueryExecutionTests
     {
-        const string TFS_ADDRESS = "http://srvfundation:8080/tfs";
-        const string QUERY_PATH = "EquipoIE/Shared Queries/Ormazabal/Monitorización de Celdas/Current Sprint/";
-        const string QUERY_NAME = "Sprint Backlog";
-
         [TestMethod]
         public void ExecuteExistingQuery()
         {
-            var tfsServer = new TfsTeamProjectCollection(new Uri(TFS_ADDRESS));
+            var tfsServer = new TfsTeamProjectCollection(new Uri(Properties.Settings.Default.TfsAddress));
 
             tfsServer.ClientCredentials = new TfsClientCredentials(new WindowsCredential());
             tfsServer.Connect(Microsoft.TeamFoundation.Framework.Common.ConnectOptions.None);
 
             var workItemStore = tfsServer.GetService<WorkItemStore>();
 
-            var item = GetQuery(QUERY_PATH, QUERY_NAME, workItemStore.Projects["EquipoIE"].QueryHierarchy);
+            var item = GetQuery(Properties.Settings.Default.QueryPath, Properties.Settings.Default.QueryName, workItemStore.Projects["EquipoIE"].QueryHierarchy);
 
             var text = ((QueryDefinition)item).QueryText;
 
