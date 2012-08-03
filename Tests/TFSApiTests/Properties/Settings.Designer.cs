@@ -49,5 +49,14 @@ namespace TFSApiTests.Properties {
                 return ((string)(this["TfsAddress"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("YourTeamProject")]
+        public string TeamProject {
+            get {
+                return ((string)(this["TeamProject"]));
+            }
+        }
     }
 }
