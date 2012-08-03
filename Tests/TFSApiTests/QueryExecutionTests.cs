@@ -20,13 +20,18 @@ namespace TFSApiTests
 
             var workItemStore = tfsServer.GetService<WorkItemStore>();
 
-            var item = GetQuery(Properties.Settings.Default.QueryPath, Properties.Settings.Default.QueryName, workItemStore.Projects["EquipoIE"].QueryHierarchy);
+            var item = GetQuery(Properties.Settings.Default.QueryPath, Properties.Settings.Default.QueryName, workItemStore.Projects[Properties.Settings.Default.TeamProject].QueryHierarchy);
 
             var text = ((QueryDefinition)item).QueryText;
 
             var query = new Query(workItemStore, text);
 
             var results = query.RunLinkQuery();
+        }
+
+        private string ReplaceMacros(string queryText)
+        {
+            return queryText.Replace("@project", "'" + Properties.Settings.Default.TeamProject + "'");
         }
 
         private QueryItem GetQuery(string path, string name, IEnumerable<QueryItem> queryItems)
