@@ -13,41 +13,76 @@ namespace TFSApiTests
         [TestMethod]
         public void ExecuteExistingQuery()
         {
-            var tfsServer = new TfsTeamProjectCollection(new Uri(Properties.Settings.Default.TfsAddress));
-
-            tfsServer.ClientCredentials = new TfsClientCredentials(new WindowsCredential());
-            tfsServer.Connect(Microsoft.TeamFoundation.Framework.Common.ConnectOptions.None);
+            var tfsServer = ConnectToTfs();
 
             var workItemStore = tfsServer.GetService<WorkItemStore>();
 
+            var query = GetRunnableQuery(workItemStore);
+
+            List<WorkItem> workItems = Run(workItemStore, query);
+
+            Assert.IsTrue(workItems.Any());
+        }
+
+        private Query GetRunnableQuery(WorkItemStore workItemStore)
+        {
             var item = GetQuery(Properties.Settings.Default.QueryPath, Properties.Settings.Default.QueryName, workItemStore.Projects[Properties.Settings.Default.TeamProject].QueryHierarchy);
 
             var text = ((QueryDefinition)item).QueryText;
 
             var query = new Query(workItemStore, ReplaceMacros(text));
+            return query;
+        }
 
-            var workItems = new List<WorkItem>();
-
+        private List<WorkItem> Run(WorkItemStore workItemStore, Query query)
+        {
+            List<WorkItem> workItems;
             if (query.IsLinkQuery)
             {
-                var queryResults = query.RunLinkQuery();
-                
-                foreach (WorkItemLinkInfo i in queryResults)
-                {
-                    var wi = workItemStore.GetWorkItem(i.TargetId);
-                    workItems.Add(wi);
-                }
+                workItems = RunLinkQuery(workItemStore, query);
             }
             else
             {
-                var queryResults = query.RunQuery();
-                foreach (WorkItem workitem in queryResults)
-                {
-                    workItems.Add(workitem);
-                }
+                workItems = RunQuery(query);
+            }
+            return workItems;
+        }
+
+        private List<WorkItem> RunQuery(Query query)
+        {
+            var workItems = new  List<WorkItem>();
+
+            var queryResults = query.RunQuery();
+            
+            foreach (WorkItem workitem in queryResults)
+            {
+                workItems.Add(workitem);
             }
 
-            Assert.IsTrue(workItems.Any());
+            return workItems;
+        }
+
+        private List<WorkItem> RunLinkQuery(WorkItemStore workItemStore, Query query)
+        {
+            var workItems = new List<WorkItem>();
+            var queryResults = query.RunLinkQuery();
+
+            foreach (WorkItemLinkInfo i in queryResults)
+            {
+                var wi = workItemStore.GetWorkItem(i.TargetId);
+                workItems.Add(wi);
+            }
+
+            return workItems;
+        }
+
+        private TfsTeamProjectCollection ConnectToTfs()
+        {
+            var tfsServer = new TfsTeamProjectCollection(new Uri(Properties.Settings.Default.TfsAddress));
+
+            tfsServer.ClientCredentials = new TfsClientCredentials(new WindowsCredential());
+            tfsServer.Connect(Microsoft.TeamFoundation.Framework.Common.ConnectOptions.None);
+            return tfsServer;
         }
 
         private string ReplaceMacros(string queryText)
