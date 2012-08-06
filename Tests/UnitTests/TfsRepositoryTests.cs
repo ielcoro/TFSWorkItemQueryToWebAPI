@@ -13,7 +13,7 @@ using TFSWorkItemQueryService;
 namespace UnitTests
 {
     [TestClass]
-    public class TfsQueryTests
+    public class TfsRepositoryTests
     {
         private const string project = "SampleProject";
         private const string queryPath = "SamplePath/Sample/";
