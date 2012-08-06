@@ -9,12 +9,10 @@ namespace TFSWorkItemQueryService.Repository
 {
     public class TFSRepository
     {
-        private ITfsContext context;
 
-        public TFSRepository(ITfsContext context)
+        public IEnumerable<WorkItem> Run(string queryPath, string queryName)
         {
-            // TODO: Complete member initialization
-            this.context = context;
+            throw new NotImplementedException();
         }
     }
 }
