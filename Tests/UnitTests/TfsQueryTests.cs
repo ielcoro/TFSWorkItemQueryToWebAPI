@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using Microsoft.TeamFoundation.Client;
 using System.Linq;
+using Microsoft.QualityTools.Testing.Fakes;
+using Microsoft.TeamFoundation.WorkItemTracking.Client.Fakes;
 
 namespace UnitTests
 {
@@ -13,17 +15,31 @@ namespace UnitTests
     public class TfsQueryTests
     {
         [TestMethod]
-        public void PassingAQueryPathAndAQueryNameShouldReturnOneWorkItem()
+        public void QueryRepositoryShouldLookUpInWorkItemStoreForQuery()
         {
-            string queryPath = "/Sample/TestQuery";
-            string queryName = "One Work Item";
+            using (ShimsContext.Create())
+            {
+                string project = "SampleProject";
+                string queryPath = "SamplePath/Sample/";
+                string queryName = "Sample Query";
 
-            var repository = new TFSRepository();
+                var queryFinder = A.Fake<IQueryFinder>();
+                var queryDefinition = new ShimQueryDefinition();
 
-            IEnumerable<WorkItem> workItems = repository.Run(queryPath, queryName);
+                queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
 
-            Assert.IsTrue(workItems.Count() == 1);
+                A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
+                 .Returns(queryDefinition);
+
+                var repository = new TFSRepository(queryFinder);
+
+                repository.Run(project, queryPath, queryName);
+
+                A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
+                 .MustHaveHappened();
+            }
         }
 
+        
     }
 }

@@ -9,10 +9,18 @@ namespace TFSWorkItemQueryService.Repository
 {
     public class TFSRepository
     {
+        private IQueryFinder queryFinder;
 
-        public IEnumerable<WorkItem> Run(string queryPath, string queryName)
+        public TFSRepository(IQueryFinder queryFinder)
         {
-            throw new NotImplementedException();
+            this.queryFinder = queryFinder;
+        }
+
+        public IEnumerable<WorkItem> Run(string project, string queryPath, string queryName)
+        {
+            queryFinder.FindQuery(project, queryPath, queryName);
+
+            return null;
         }
     }
 }

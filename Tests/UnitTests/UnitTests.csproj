@@ -41,14 +41,28 @@
     <Reference Include="FakeItEasy">
       <HintPath>C:\Users\ielcoro\Documents\Visual Studio 2012\Projects\Github\TFSWorkItemQueryToWebAPI\packages\FakeItEasy.1.7.4582.63\lib\NET40\FakeItEasy.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.TeamFoundation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.11.0.0.0.Fakes">
+      <HintPath>FakesAssemblies\Microsoft.TeamFoundation.11.0.0.0.Fakes.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.TeamFoundation.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.Client.11.0.0.0.Fakes">
+      <HintPath>FakesAssemblies\Microsoft.TeamFoundation.Client.11.0.0.0.Fakes.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.TeamFoundation.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.Common.11.0.0.0.Fakes">
+      <HintPath>FakesAssemblies\Microsoft.TeamFoundation.Common.11.0.0.0.Fakes.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client.11.0.0.0.Fakes">
+      <HintPath>FakesAssemblies\Microsoft.TeamFoundation.WorkItemTracking.Client.11.0.0.0.Fakes.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xaml" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -67,6 +81,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Fakes Include="Fakes\Microsoft.TeamFoundation.fakes" />
+    <Fakes Include="Fakes\Microsoft.TeamFoundation.Client.fakes" />
+    <Fakes Include="Fakes\Microsoft.TeamFoundation.Common.fakes" />
+    <Fakes Include="Fakes\Microsoft.TeamFoundation.WorkItemTracking.Client.fakes" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
