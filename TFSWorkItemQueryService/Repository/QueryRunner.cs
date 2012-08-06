@@ -8,10 +8,20 @@ namespace TFSWorkItemQueryService.Repository
 {
     public class QueryRunner : IQueryRunner
     {
+        private ITfsContext currentContext;
+
+        public QueryRunner(ITfsContext currentContext)
+        {
+            this.currentContext = currentContext;
+        }
 
         public IEnumerable<WorkItem> RunQuery(QueryDefinition queryDefinition)
         {
-            throw new NotImplementedException();
+            var query = new Query(currentContext.CurrentWorkItemStore, queryDefinition.QueryText);
+
+            WorkItemCollection workItems = query.RunQuery();
+
+            return workItems.OfType<WorkItem>();
         }
     }
 }

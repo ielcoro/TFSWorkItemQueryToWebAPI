@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TFSWorkItemQueryService.Repository;
 using System.Linq;
 using Microsoft.QualityTools.Testing.Fakes;
+using UnitTests.Fakes;
+using FakeItEasy;
 
 namespace UnitTests
 {
@@ -14,14 +16,35 @@ namespace UnitTests
     {
         ShimQueryDefinition queryDefinition;
         IDisposable shimContext;
+        ITfsContext tfsContext;
 
         [TestInitialize]
         public void Initialize()
         {
             shimContext = ShimsContext.Create();
 
+            tfsContext = new FakeTfsContext(shimContext);
             queryDefinition = new ShimQueryDefinition();
             queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
+
+            SetupQueryShim();
+        }
+
+        /// <summary>
+        /// Configures a query shim to simulate Run on TFS Query objects
+        /// </summary>
+        private void SetupQueryShim()
+        {
+            ShimQuery.ConstructorWorkItemStoreString = (q, ws, wi) =>
+            {
+                ShimQuery query = new ShimQuery();
+
+                query.QueryStringGet = () => wi;
+
+                q = query;
+            };
+
+            ShimQuery.AllInstances.RunQuery = (q) => new ShimWorkItemCollection();
         }
 
         [TestCleanup]
@@ -31,13 +54,27 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void QueryRunFromQueryDefinitonShouldReturnWorkItems()
+        public void QueryRunFromQueryDefinitonShouldCallContext()
         {
-            var queryRunner = new QueryRunner();
+            var tfsContextMock = A.Fake<ITfsContext>(x => x.Wrapping(tfsContext));
+
+            var queryRunner = new QueryRunner(tfsContextMock);
 
             IEnumerable<WorkItem> workItems = queryRunner.RunQuery(queryDefinition);
 
-            Assert.IsTrue(workItems.Any());
+            A.CallTo(() => tfsContextMock.CurrentWorkItemStore).MustHaveHappened();
+        }
+
+        [TestMethod]
+        public void QueryRunShouldTransformLinkedQueries()
+        {
+            var tfsContextMock = A.Fake<ITfsContext>(x => x.Wrapping(tfsContext));
+
+            var queryRunner = new QueryRunner(tfsContextMock);
+
+            IEnumerable<WorkItem> workItems = queryRunner.RunQuery(queryDefinition);
+
+            A.CallTo(() => tfsContextMock.CurrentWorkItemStore.GetWorkItem(A<Int32>.Ignored)).MustHaveHappened();
         }
     }
 }
