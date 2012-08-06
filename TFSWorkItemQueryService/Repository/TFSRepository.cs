@@ -9,23 +9,12 @@ namespace TFSWorkItemQueryService.Repository
 {
     public class TFSRepository
     {
-        private TfsTeamProjectCollection Connect(Uri tfsAddress)
+        private ITfsConnectionManager connectionManager;
+
+        public TFSRepository(ITfsConnectionManager connectionManager)
         {
-            var tfsServer = new TfsTeamProjectCollection(tfsAddress);
-
-            tfsServer.ClientCredentials = new TfsClientCredentials(new WindowsCredential());
-            tfsServer.Connect(Microsoft.TeamFoundation.Framework.Common.ConnectOptions.IncludeServices);
-
-            return tfsServer;
-        }
-
-        private IEnumerable<WorkItemLink> ExecuteQuery(Uri tfsAddress, string teamProject, string workItemQuery)
-        {
-            var tfsServer = Connect(tfsAddress);
-
-            var workItemStore = tfsServer.GetService<WorkItemStore>();
-
-            
+            // TODO: Complete member initialization
+            this.connectionManager = connectionManager;
         }
     }
 }
