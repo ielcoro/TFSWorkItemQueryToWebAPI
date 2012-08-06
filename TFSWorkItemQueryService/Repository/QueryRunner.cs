@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace TFSWorkItemQueryService.Repository
 {
@@ -14,9 +15,11 @@ namespace TFSWorkItemQueryService.Repository
             this.connectionManager = connectionManager;
         }
 
-        public IEnumerable<Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItem> Run(string p)
+        public IEnumerable<WorkItem> Run(string wiql)
         {
-            throw new NotImplementedException();
+            this.connectionManager.Connect();
+
+            return null;
         }
     }
 }
