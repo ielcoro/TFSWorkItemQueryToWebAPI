@@ -15,63 +15,63 @@ namespace UnitTests
     [TestClass]
     public class TfsQueryTests
     {
+        private const string project = "SampleProject";
+        private const string queryPath = "SamplePath/Sample/";
+        private const string queryName = "Sample Query";
+
+        IQueryFinder queryFinder;
+        ShimQueryDefinition queryDefinition;
+        IQueryRunner queryRunner;
+        IDisposable shimContext;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            shimContext = ShimsContext.Create();
+            queryFinder = A.Fake<IQueryFinder>();
+            queryDefinition = new ShimQueryDefinition();
+            queryRunner = A.Fake<IQueryRunner>();
+
+            queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
+
+            A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
+                .Returns(queryDefinition);
+
+        }
+
+        [TestCleanup]
+        public void CleanUp()
+        {
+            shimContext.Dispose();
+        }
+
         [TestMethod]
         public void QueryRepositoryShouldLookUpInWorkItemStoreForQuery()
         {
-            using (ShimsContext.Create())
-            {
-                string project = "SampleProject";
-                string queryPath = "SamplePath/Sample/";
-                string queryName = "Sample Query";
 
-                var queryFinder = A.Fake<IQueryFinder>();
-                var queryDefinition = new ShimQueryDefinition();
-                var queryRunner = A.Dummy<IQueryRunner>();
+            var repository = new TFSRepository(queryFinder, queryRunner);
 
-                queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
+            repository.Run(project, queryPath, queryName);
 
-                A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
-                 .Returns(queryDefinition);
-
-                var repository = new TFSRepository(queryFinder, queryRunner);
-
-                repository.Run(project, queryPath, queryName);
-
-                A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
-                 .MustHaveHappened();
-            }
+            A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
+             .MustHaveHappened();
         }
 
         [TestMethod]
         public void QueryRepositoryShouldReturnWorkItemsForSpecifiedQuery()
         {
-            using (ShimsContext.Create())
-            {
-                string project = "SampleProject";
-                string queryPath = "SamplePath/Sample";
-                string queryName = "Sample Query";
-                int desiredWorkItems = 5;
+            int desiredWorkItems = 5;
 
-                var queryFinder = A.Fake<IQueryFinder>();
-                var queryDefinition = new ShimQueryDefinition();
-                var queryRunner = A.Fake<IQueryRunner>();
+            A.CallTo(() => queryRunner.RunQuery(A<QueryDefinition>.Ignored))
+             .Returns(CreateWorkItems(desiredWorkItems));
 
-                queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
+            var repository = new TFSRepository(queryFinder, queryRunner);
 
-                A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
-                 .Returns(queryDefinition);
+            IEnumerable<WorkItem> workItems = repository.Run(project, queryPath, queryName);
 
-                A.CallTo(() => queryRunner.RunQuery(A<QueryDefinition>.Ignored))
-                 .Returns(CreateWorkItems(desiredWorkItems));
+            A.CallTo(() => queryRunner.RunQuery(A<QueryDefinition>.Ignored)).MustHaveHappened();
 
-                var repository = new TFSRepository(queryFinder, queryRunner);
-
-                IEnumerable<WorkItem> workItems = repository.Run(project, queryPath, queryName);
-
-                A.CallTo(() => queryRunner.RunQuery(A<QueryDefinition>.Ignored)).MustHaveHappened();
-
-                Assert.AreEqual(desiredWorkItems, workItems.Count());
-            }
+            Assert.AreEqual(desiredWorkItems, workItems.Count());
         }
 
         private IEnumerable<WorkItem> CreateWorkItems(int desiredWorkItems)
