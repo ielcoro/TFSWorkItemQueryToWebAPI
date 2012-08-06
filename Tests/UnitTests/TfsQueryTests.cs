@@ -67,6 +67,8 @@ namespace UnitTests
 
                 IEnumerable<WorkItem> workItems = repository.Run(project, queryPath, queryName);
 
+                A.CallTo(() => queryRunner.RunQuery(queryDefinition)).MustHaveHappened();
+
                 Assert.AreEqual(desiredWorkItems, workItems.Count());
             }
         }
