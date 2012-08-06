@@ -12,23 +12,17 @@ namespace TFSWorkItemQueryService.Repository
         private IQueryFinder queryFinder;
         private IQueryRunner queryRunner;
 
-        public TFSRepository(IQueryFinder queryFinder)
-        {
-            this.queryFinder = queryFinder;
-        }
-
         public TFSRepository(IQueryFinder queryFinder, IQueryRunner queryRunner)
         {
-            // TODO: Complete member initialization
             this.queryFinder = queryFinder;
             this.queryRunner = queryRunner;
         }
 
         public IEnumerable<WorkItem> Run(string project, string queryPath, string queryName)
         {
-            queryFinder.FindQuery(project, queryPath, queryName);
+            QueryDefinition queryDefinition = queryFinder.FindQuery(project, queryPath, queryName);
 
-            return null;
+            return queryRunner.RunQuery(null);
         }
     }
 }

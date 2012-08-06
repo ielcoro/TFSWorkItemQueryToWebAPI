@@ -26,13 +26,14 @@ namespace UnitTests
 
                 var queryFinder = A.Fake<IQueryFinder>();
                 var queryDefinition = new ShimQueryDefinition();
+                var queryRunner = A.Dummy<IQueryRunner>();
 
                 queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
 
                 A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
                  .Returns(queryDefinition);
 
-                var repository = new TFSRepository(queryFinder);
+                var repository = new TFSRepository(queryFinder, queryRunner);
 
                 repository.Run(project, queryPath, queryName);
 
@@ -60,14 +61,14 @@ namespace UnitTests
                 A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
                  .Returns(queryDefinition);
 
-                A.CallTo(() => queryRunner.RunQuery(queryDefinition))
+                A.CallTo(() => queryRunner.RunQuery(A<QueryDefinition>.Ignored))
                  .Returns(CreateWorkItems(desiredWorkItems));
 
                 var repository = new TFSRepository(queryFinder, queryRunner);
 
                 IEnumerable<WorkItem> workItems = repository.Run(project, queryPath, queryName);
 
-                A.CallTo(() => queryRunner.RunQuery(queryDefinition)).MustHaveHappened();
+                A.CallTo(() => queryRunner.RunQuery(A<QueryDefinition>.Ignored)).MustHaveHappened();
 
                 Assert.AreEqual(desiredWorkItems, workItems.Count());
             }
@@ -75,14 +76,14 @@ namespace UnitTests
 
         private IEnumerable<WorkItem> CreateWorkItems(int desiredWorkItems)
         {
-            List<ShimWorkItem> workItems = new List<ShimWorkItem>();
+            List<WorkItem> workItems = new List<WorkItem>();
 
             for (int i = 0; i < desiredWorkItems; i++)
             {
                 workItems.Add(new ShimWorkItem());
             }
 
-            return workItems.Cast<WorkItem>();
+            return workItems;
         }
     }
 }
