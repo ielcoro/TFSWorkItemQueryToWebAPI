@@ -8,6 +8,7 @@ using Microsoft.TeamFoundation.Client;
 using System.Linq;
 using Microsoft.QualityTools.Testing.Fakes;
 using Microsoft.TeamFoundation.WorkItemTracking.Client.Fakes;
+using TFSWorkItemQueryService;
 
 namespace UnitTests
 {
@@ -40,6 +41,46 @@ namespace UnitTests
             }
         }
 
-        
+        [TestMethod]
+        public void QueryRepositoryShouldReturnWorkItemsForSpecifiedQuery()
+        {
+            using (ShimsContext.Create())
+            {
+                string project = "SampleProject";
+                string queryPath = "SamplePath/Sample";
+                string queryName = "Sample Query";
+                int desiredWorkItems = 5;
+
+                var queryFinder = A.Fake<IQueryFinder>();
+                var queryDefinition = new ShimQueryDefinition();
+                var queryRunner = A.Fake<IQueryRunner>();
+
+                queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
+
+                A.CallTo(() => queryFinder.FindQuery(project, queryPath, queryName))
+                 .Returns(queryDefinition);
+
+                A.CallTo(() => queryRunner.RunQuery(queryDefinition))
+                 .Returns(CreateWorkItems(desiredWorkItems));
+
+                var repository = new TFSRepository(queryFinder, queryRunner);
+
+                IEnumerable<WorkItem> workItems = repository.Run(project, queryPath, queryName);
+
+                Assert.AreEqual(desiredWorkItems, workItems.Count());
+            }
+        }
+
+        private IEnumerable<WorkItem> CreateWorkItems(int desiredWorkItems)
+        {
+            List<ShimWorkItem> workItems = new List<ShimWorkItem>();
+
+            for (int i = 0; i < desiredWorkItems; i++)
+            {
+                workItems.Add(new ShimWorkItem());
+            }
+
+            return workItems.Cast<WorkItem>();
+        }
     }
 }
