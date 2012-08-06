@@ -9,12 +9,12 @@ namespace TFSWorkItemQueryService.Repository
 {
     public class TFSRepository
     {
-        private ITfsConnectionManager connectionManager;
+        private ITfsContext context;
 
-        public TFSRepository(ITfsConnectionManager connectionManager)
+        public TFSRepository(ITfsContext context)
         {
             // TODO: Complete member initialization
-            this.connectionManager = connectionManager;
+            this.context = context;
         }
     }
 }

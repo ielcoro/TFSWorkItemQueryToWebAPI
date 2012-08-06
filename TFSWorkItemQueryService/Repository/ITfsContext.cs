@@ -5,8 +5,7 @@ using System.Text;
 
 namespace TFSWorkItemQueryService.Repository
 {
-    public interface ITfsConnectionManager
+    public interface ITfsContext
     {
-        object Connect();
     }
 }
