@@ -19,7 +19,7 @@ namespace UnitTests
 
             var queryRunner = new QueryRunner(connectionManager);
 
-            IEnumerable<WorkItem> workItems = queryRunner.Run("*");
+            IEnumerable<WorkItem> workItems = queryRunner.Run(new QueryDefinition("test", "SELECT System.ID, System.Title from workitems"));
 
             A.CallTo(() => connectionManager.Connect()).MustHaveHappened();
         }

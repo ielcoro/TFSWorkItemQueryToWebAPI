@@ -15,7 +15,7 @@ namespace TFSWorkItemQueryService.Repository
             this.connectionManager = connectionManager;
         }
 
-        public IEnumerable<WorkItem> Run(string wiql)
+        public IEnumerable<WorkItem> Run(QueryDefinition wiql)
         {
             this.connectionManager.Connect();
 
