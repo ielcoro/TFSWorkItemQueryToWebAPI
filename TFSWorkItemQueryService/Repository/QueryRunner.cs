@@ -19,9 +19,19 @@ namespace TFSWorkItemQueryService.Repository
         {
             var query = new Query(currentContext.CurrentWorkItemStore, queryDefinition.QueryText);
 
-            WorkItemCollection workItems = query.RunQuery();
+            if (query.IsLinkQuery)
+            {
+                var queryResults = query.RunLinkQuery();
 
-            return workItems.OfType<WorkItem>();
+                return from l in queryResults.OfType<WorkItemLinkInfo>()
+                       select currentContext.CurrentWorkItemStore.GetWorkItem(l.TargetId);
+            }
+            else
+            {
+                var queryResults = query.RunQuery();
+
+                return queryResults.OfType<WorkItem>();
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace UnitTests
     {
         ShimQueryDefinition queryDefinition;
         IDisposable shimContext;
-        ITfsContext tfsContext;
+        FakeTfsContext tfsContext;
 
         [TestInitialize]
         public void Initialize()
@@ -27,13 +27,13 @@ namespace UnitTests
             queryDefinition = new ShimQueryDefinition();
             queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
 
-            SetupQueryShim();
+            SetupQueryShim(tfsContext);
         }
 
         /// <summary>
         /// Configures a query shim to simulate Run on TFS Query objects
         /// </summary>
-        private void SetupQueryShim()
+        private void SetupQueryShim(FakeTfsContext tfsContext)
         {
             ShimQuery.ConstructorWorkItemStoreString = (q, ws, wi) =>
             {
@@ -44,7 +44,17 @@ namespace UnitTests
                 q = query;
             };
 
+            var workItem = new ShimWorkItem();
+            workItem.IdGet = () => 5;
+            workItem.TitleGet = () => "Linked Work Item";
+
+            var workItemLinkInfo = new WorkItemLinkInfo();
+            workItemLinkInfo.TargetId = 5;
+
+            tfsContext.AddWorkItem(workItem);
+            
             ShimQuery.AllInstances.RunQuery = (q) => new ShimWorkItemCollection();
+            ShimQuery.AllInstances.RunLinkQuery = (q) => new List<WorkItemLinkInfo>() {  workItemLinkInfo }.ToArray();
         }
 
         [TestCleanup]
@@ -68,13 +78,17 @@ namespace UnitTests
         [TestMethod]
         public void QueryRunShouldTransformLinkedQueries()
         {
-            var tfsContextMock = A.Fake<ITfsContext>(x => x.Wrapping(tfsContext));
+            var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContext));
+
+            ShimQuery.AllInstances.IsLinkQueryGet = (q) => true;
 
             var queryRunner = new QueryRunner(tfsContextMock);
 
             IEnumerable<WorkItem> workItems = queryRunner.RunQuery(queryDefinition);
 
-            A.CallTo(() => tfsContextMock.CurrentWorkItemStore.GetWorkItem(A<Int32>.Ignored)).MustHaveHappened();
+            A.CallTo(() => tfsContextMock.CurrentWorkItemStore).MustHaveHappened();
+
+            Assert.IsTrue(workItems.Where(w => w.Title == "Linked Work Item").Any());
         }
     }
 }
