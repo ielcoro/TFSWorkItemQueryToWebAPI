@@ -23,5 +23,7 @@ namespace UnitTests
 
             A.CallTo(() => connectionManager.Connect()).MustHaveHappened();
         }
+
+
     }
 }
