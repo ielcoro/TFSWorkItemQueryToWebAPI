@@ -53,30 +53,16 @@ namespace TFSApiTests
 
         private List<WorkItem> RunQuery(Query query)
         {
-            var workItems = new  List<WorkItem>();
-
             var queryResults = query.RunQuery();
-            
-            foreach (WorkItem workitem in queryResults)
-            {
-                workItems.Add(workitem);
-            }
 
-            return workItems;
+            return queryResults.Cast<WorkItem>().ToList();
         }
 
         private List<WorkItem> RunLinkQuery(WorkItemStore workItemStore, Query query)
         {
-            var workItems = new List<WorkItem>();
             var queryResults = query.RunLinkQuery();
 
-            foreach (WorkItemLinkInfo i in queryResults)
-            {
-                var wi = workItemStore.GetWorkItem(i.TargetId);
-                workItems.Add(wi);
-            }
-
-            return workItems;
+            return queryResults.Select(i => workItemStore.GetWorkItem(i.TargetId)).ToList();
         }
 
         private TfsTeamProjectCollection ConnectToTfs()
