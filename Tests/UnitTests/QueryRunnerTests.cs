@@ -52,7 +52,7 @@ namespace UnitTests
             workItemLinkInfo.TargetId = 5;
 
             tfsContext.AddWorkItem(workItem);
-            
+            ShimQuery.AllInstances.IsLinkQueryGet = (q) => true;
             ShimQuery.AllInstances.RunQuery = (q) => new ShimWorkItemCollection();
             ShimQuery.AllInstances.RunLinkQuery = (q) => new List<WorkItemLinkInfo>() {  workItemLinkInfo }.ToArray();
         }
