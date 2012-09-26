@@ -90,9 +90,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\ielcoro\Documents\Visual Studio 2012\Projects\Github\TFSWorkItemQueryToWebAPI\TFSWorkItemQueryService\TFSWorkItemQueryService.csproj">
+    <ProjectReference Include="C:\Users\ielcoro\Documents\Visual Studio 2012\Projects\Github\TFSWorkItemQueryToWebAPI\TFSWorkItemQueryService\TFSWorkItemQueryService.back.csproj">
       <Project>{09EACEFE-46E2-41C6-A5BF-298B6B79B700}</Project>
-      <Name>TFSWorkItemQueryService</Name>
+      <Name>TFSWorkItemQueryService.back</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
