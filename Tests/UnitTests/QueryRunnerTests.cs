@@ -57,7 +57,7 @@ namespace UnitTests
 
             ShimQuery.AllInstances.IsLinkQueryGet = (q) => false;
             ShimQuery.AllInstances.RunQuery = (q) => collection;
-            ShimQuery.AllInstances.RunLinkQuery = (q) => new List<WorkItemLinkInfo>() {  workItemLinkInfo }.ToArray();
+            ShimQuery.AllInstances.RunLinkQuery = (q) => new List<WorkItemLinkInfo>() { workItemLinkInfo }.ToArray();
         }
 
         private ShimWorkItemCollection SetupWorkItemCollection(params ShimWorkItem[] workItems)
@@ -125,6 +125,14 @@ namespace UnitTests
         {
             var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContext));
             var macroParserMock = A.Fake<IQueryMacroParser>();
+
+            var resultQuery = new ShimQueryDefinition();
+
+            resultQuery.QueryTextGet = () => "SELECT System.ID, System.Title from workitems WHERE Project = \"TestProject\"";
+
+            A.CallTo(() => macroParserMock.Replace(A<QueryDefinition>.Ignored))
+             .Returns(resultQuery);
+
 
             var query = "SELECT System.ID, System.Title from workitems WHERE Project = @Project";
             var queryRunner = new QueryRunner(tfsContextMock, macroParserMock);
