@@ -52,9 +52,21 @@ namespace UnitTests
             workItemLinkInfo.TargetId = 5;
 
             tfsContext.AddWorkItem(workItem);
-            ShimQuery.AllInstances.IsLinkQueryGet = (q) => true;
-            ShimQuery.AllInstances.RunQuery = (q) => new ShimWorkItemCollection();
+
+            ShimWorkItemCollection collection = SetupWorkItemCollection(workItem);
+
+            ShimQuery.AllInstances.IsLinkQueryGet = (q) => false;
+            ShimQuery.AllInstances.RunQuery = (q) => collection;
             ShimQuery.AllInstances.RunLinkQuery = (q) => new List<WorkItemLinkInfo>() {  workItemLinkInfo }.ToArray();
+        }
+
+        private ShimWorkItemCollection SetupWorkItemCollection(params ShimWorkItem[] workItems)
+        {
+            var collection = new ShimWorkItemCollection();
+
+            collection.Bind(workItems.Select(w => w.Instance));
+
+            return collection;
         }
 
         [TestCleanup]
@@ -89,6 +101,26 @@ namespace UnitTests
             A.CallTo(() => tfsContextMock.CurrentWorkItemStore).MustHaveHappened();
 
             Assert.IsTrue(workItems.Where(w => w.Title == "Linked Work Item").Any());
+        }
+
+        [TestMethod]
+        public void QueryRunShouldRunStandardQueries()
+        {
+            var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContext));
+
+            var queryRunner = new QueryRunner(tfsContextMock);
+
+            IEnumerable<WorkItem> workItems = queryRunner.RunQuery(queryDefinition);
+
+            A.CallTo(() => tfsContextMock.CurrentWorkItemStore).MustHaveHappened();
+
+            Assert.IsTrue(workItems.Where(w => w.Title == "Linked Work Item").Any());
+        }
+
+        [TestMethod]
+        public void QueryRunnerShouldReplaceMacrosBeforeRunningQueries()
+        {
+            
         }
     }
 }

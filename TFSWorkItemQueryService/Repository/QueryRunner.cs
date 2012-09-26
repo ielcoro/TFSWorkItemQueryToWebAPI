@@ -29,7 +29,7 @@ namespace TFSWorkItemQueryService.Repository
             else
             {
                 var queryResults = query.RunQuery();
-
+                
                 return queryResults.OfType<WorkItem>();
             }
         }
