@@ -123,6 +123,7 @@ namespace UnitTests
         [TestMethod]
         public void QueryRunnerShouldCallToReplaceMacrosBeforeRunningQueries()
         {
+            //Maybe is a smeel you can really assert that the code is using the right version of the query?
             var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContext));
             var macroParserMock = A.Fake<IQueryMacroParser>();
 
@@ -132,8 +133,7 @@ namespace UnitTests
 
             A.CallTo(() => macroParserMock.Replace(A<QueryDefinition>.Ignored))
              .Returns(resultQuery);
-
-
+            
             var query = "SELECT System.ID, System.Title from workitems WHERE Project = @Project";
             var queryRunner = new QueryRunner(tfsContextMock, macroParserMock);
 
