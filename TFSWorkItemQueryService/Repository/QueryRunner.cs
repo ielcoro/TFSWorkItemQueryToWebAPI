@@ -10,7 +10,7 @@ namespace TFSWorkItemQueryService.Repository
     {
         private ITfsContext currentContext;
 
-        public QueryRunner(ITfsContext currentContext)
+        public QueryRunner(ITfsContext currentContext, IQueryMacroParser macroParser)
         {
             this.currentContext = currentContext;
         }

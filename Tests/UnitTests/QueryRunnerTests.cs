@@ -79,8 +79,9 @@ namespace UnitTests
         public void QueryRunFromQueryDefinitonShouldCallContext()
         {
             var tfsContextMock = A.Fake<ITfsContext>(x => x.Wrapping(tfsContext));
+            var queryMacroParser = A.Fake<IQueryMacroParser>();
 
-            var queryRunner = new QueryRunner(tfsContextMock);
+            var queryRunner = new QueryRunner(tfsContextMock, queryMacroParser);
 
             IEnumerable<WorkItem> workItems = queryRunner.RunQuery(queryDefinition);
 
@@ -93,8 +94,9 @@ namespace UnitTests
             var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContext));
 
             ShimQuery.AllInstances.IsLinkQueryGet = (q) => true;
+            var queryMacroParser = A.Fake<IQueryMacroParser>();
 
-            var queryRunner = new QueryRunner(tfsContextMock);
+            var queryRunner = new QueryRunner(tfsContextMock, queryMacroParser);
 
             IEnumerable<WorkItem> workItems = queryRunner.RunQuery(queryDefinition);
 
@@ -107,8 +109,9 @@ namespace UnitTests
         public void QueryRunShouldRunStandardQueries()
         {
             var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContext));
+            var queryMacroParser = A.Fake<IQueryMacroParser>();
 
-            var queryRunner = new QueryRunner(tfsContextMock);
+            var queryRunner = new QueryRunner(tfsContextMock, queryMacroParser);
 
             IEnumerable<WorkItem> workItems = queryRunner.RunQuery(queryDefinition);
 
@@ -118,9 +121,24 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void QueryRunnerShouldReplaceMacrosBeforeRunningQueries()
+        public void QueryRunnerShouldCallToReplaceMacrosBeforeRunningQueries()
         {
-            
+            var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContext));
+            var macroParserMock = A.Fake<IQueryMacroParser>();
+
+            var query = "SELECT System.ID, System.Title from workitems WHERE Project = @Project";
+            var queryRunner = new QueryRunner(tfsContextMock, macroParserMock);
+
+            var queryWithMacros = new ShimQueryDefinition();
+
+            queryWithMacros.QueryTextGet = () => query;
+
+            IEnumerable<WorkItem> workItems = queryRunner.RunQuery(queryDefinition);
+
+            A.CallTo(() => macroParserMock.Replace(A<QueryDefinition>.Ignored)).MustHaveHappened();
+            A.CallTo(() => tfsContextMock.CurrentWorkItemStore).MustHaveHappened();
+
+            Assert.IsTrue(workItems.Where(w => w.Title == "Linked Work Item").Any());
         }
     }
 }
