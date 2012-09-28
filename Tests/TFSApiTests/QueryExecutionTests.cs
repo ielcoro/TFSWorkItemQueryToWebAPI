@@ -13,7 +13,6 @@ namespace TFSApiTests
         [TestMethod]
         public void ExecuteExistingQuery()
         {
-
             var tfsServer = new TfsTeamProjectCollection(new Uri(Properties.Settings.Default.TfsAddress));
 
             tfsServer.ClientCredentials = new TfsClientCredentials(new WindowsCredential());
