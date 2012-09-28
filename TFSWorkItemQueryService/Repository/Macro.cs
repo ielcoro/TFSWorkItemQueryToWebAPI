@@ -9,6 +9,7 @@ namespace TFSWorkItemQueryService.Repository
     {
         public Macro (string name)
 	    {
+            if (String.IsNullOrEmpty(name)) throw new ArgumentException("Name cannot be null or empty", "name");
             this.Name = name;
 	    }
 

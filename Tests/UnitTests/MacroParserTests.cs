@@ -20,5 +20,15 @@ namespace UnitTests
 
             Assert.AreEqual(macro.Name, name);
         }
+
+        [TestMethod]
+        public void MacroNameCannotBeNullOrEmpty()
+        {
+            string emptyName = "";
+            string nullName = null;
+
+            ExtAssert.Throws<ArgumentException>(() => new Macro(emptyName));
+            ExtAssert.Throws<ArgumentException>(() => new Macro(nullName));
+        }
     }
 }
