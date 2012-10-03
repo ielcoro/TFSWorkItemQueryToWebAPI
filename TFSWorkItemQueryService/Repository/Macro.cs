@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TFSWorkItemQueryService.Repository
 {
-    public class Macro
+    public class Macro : IMacro
     {
         public Macro (string name)
 	    {
@@ -14,5 +14,10 @@ namespace TFSWorkItemQueryService.Repository
 	    }
 
         public string Name { get; set; }
+
+        public string GetValue()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
