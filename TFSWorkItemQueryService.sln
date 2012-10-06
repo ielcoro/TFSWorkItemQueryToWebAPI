@@ -7,7 +7,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0C15B54A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TFSApiTests", "Tests\TFSApiTests\TFSApiTests.csproj", "{B5568E0E-F852-40FA-890D-DA0E3193ECFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "D:\ielcoro\Documents\Visual Studio 2012\Projects\Github\TFSWorkItemQueryToWebAPI\Tests\UnitTests\UnitTests.csproj", "{EBEB73F0-5D24-4763-9110-C6848BB9F0B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{EBEB73F0-5D24-4763-9110-C6848BB9F0B2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{954F66D8-87C8-4BFD-A030-7442B67FE388}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
