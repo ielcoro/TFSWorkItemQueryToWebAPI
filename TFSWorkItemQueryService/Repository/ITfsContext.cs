@@ -9,5 +9,7 @@ namespace TFSWorkItemQueryService.Repository
     public interface ITfsContext
     {
         WorkItemStore CurrentWorkItemStore { get; }
+
+        string CurrentProject { get; }
     }
 }

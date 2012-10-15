@@ -10,7 +10,7 @@ namespace TFSWorkItemQueryService.Repository
     {
         public string GetValue()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public string Name

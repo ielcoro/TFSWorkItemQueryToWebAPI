@@ -30,6 +30,8 @@ namespace UnitTests.Fakes
             get { return workItemStore; }
         }
 
+        public string CurrentProject { get; private set; }
+
         public void AddWorkItem(WorkItem workItem)
         {
             this.workItems.Add(workItem);
