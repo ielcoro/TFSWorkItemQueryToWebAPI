@@ -32,6 +32,8 @@ namespace UnitTests.Fakes
 
         public string CurrentProject { get { return "\"TestProject\""; } }
 
+        public string CurrentUser { get { return "\"Iñaki Elcoro\""; } }
+
         public void AddWorkItem(WorkItem workItem)
         {
             this.workItems.Add(workItem);

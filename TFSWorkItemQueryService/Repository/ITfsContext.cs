@@ -11,5 +11,7 @@ namespace TFSWorkItemQueryService.Repository
         WorkItemStore CurrentWorkItemStore { get; }
 
         string CurrentProject { get; }
+
+        string CurrentUser { get; }
     }
 }

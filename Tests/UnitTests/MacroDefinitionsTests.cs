@@ -67,7 +67,7 @@ namespace UnitTests
 
             //Assert
 
-            A.CallTo(() => tfsContextMock.CurrentProject).MustHaveHappened();
+            A.CallTo(() => tfsContextMock.CurrentUser).MustHaveHappened();
             Assert.AreEqual("\"Iñaki Elcoro\"", value);
         }
 
