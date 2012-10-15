@@ -8,13 +8,13 @@ namespace TFSWorkItemQueryService.Repository
 {
     public class QueryFinder : IQueryFinder
     {
-        private ITfsContext tfsContextMock;
+        private ITfsContext tfsContext;
 
-        public QueryFinder(ITfsContext tfsContextMock)
+        public QueryFinder(ITfsContext tfsContext)
         {
-            // TODO: Complete member initialization
-            this.tfsContextMock = tfsContextMock;
+            this.tfsContext = tfsContext;
         }
+        
         public QueryDefinition FindQuery(string project, string queryPath, string queryName)
         {
             throw new NotImplementedException();
