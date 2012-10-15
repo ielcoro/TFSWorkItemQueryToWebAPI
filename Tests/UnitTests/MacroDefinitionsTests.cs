@@ -13,6 +13,18 @@ namespace UnitTests
     [TestClass]
     public class MacroDefinitionsTests
     {
+        ITfsContext tfsContextMock;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            var shimContext = ShimsContext.Create();
+
+            var tfsContextInstance = new FakeTfsContext(shimContext);
+
+            tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContextInstance));
+        }
+
         [TestMethod]
         public void ProjectMacroDefinitionShouldSetMacroName()
         {
@@ -25,15 +37,8 @@ namespace UnitTests
         public void ProjectMacroDefinitionShouldGetValueFromContext()
         {
             //Arrange
-            var shimContext = ShimsContext.Create();
-
-            var tfsContextInstance = new FakeTfsContext(shimContext);
-
-            var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContextInstance));
-
-            //Act
             var projectMacro = new ProjectMacro(tfsContextMock);
-
+            //Act
             string value = projectMacro.GetValue();
 
             //Assert
@@ -54,15 +59,9 @@ namespace UnitTests
         public void UserMacroDefinitionShouldGetValueFromContext()
         {
             //Arrange
-            var shimContext = ShimsContext.Create();
-
-            var tfsContextInstance = new FakeTfsContext(shimContext);
-
-            var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContextInstance));
-
-            //Act
             var userMacro = new UserMacro(tfsContextMock);
 
+            //Act
             string value = userMacro.GetValue();
 
             //Assert
