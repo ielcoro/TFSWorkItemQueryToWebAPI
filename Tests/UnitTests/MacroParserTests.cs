@@ -75,7 +75,34 @@ namespace UnitTests
         [TestMethod]
         public void MacroParserWithTwoMatchingMacrosBothTokensShouldBeReplaced()
         {
-            Assert.Fail("Not implemented");
+            //Arrange
+            string query = "SELECT System.ID, System.Title from workitems WHERE Project = @Project AND CreatedBy = @Me";
+            var queryDefinition = new QueryDefinition("test", query);
+
+            string expectedQuery = "SELECT System.ID, System.Title from workitems WHERE Project = \"TestProject\" AND CreatedBy = \"Iñaki Elcoro\"";
+
+            var projectMacroMock = A.Fake<IMacro>();
+
+            A.CallTo(() => projectMacroMock.Name).Returns("Project");
+            A.CallTo(() => projectMacroMock.GetValue()).Returns("\"TestProject\"");
+
+            var userMacroMock = A.Fake<IMacro>();
+
+            A.CallTo(() => userMacroMock.Name).Returns("Me");
+            A.CallTo(() => userMacroMock.GetValue()).Returns("\"Iñaki Elcoro\"");
+
+            //Act
+            var parser = new MacroParser(new List<IMacro>() { projectMacroMock, userMacroMock });
+
+            QueryDefinition parsedQuery = parser.Replace(queryDefinition);
+
+            //Assert
+            A.CallTo(() => projectMacroMock.GetValue()).MustHaveHappened();
+            A.CallTo(() => projectMacroMock.Name).MustHaveHappened();
+            A.CallTo(() => userMacroMock.GetValue()).MustHaveHappened();
+            A.CallTo(() => userMacroMock.Name).MustHaveHappened();
+
+            Assert.AreEqual(expectedQuery, parsedQuery.QueryText);
         }
 
     }
