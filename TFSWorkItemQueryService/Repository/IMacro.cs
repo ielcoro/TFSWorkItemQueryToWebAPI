@@ -4,6 +4,6 @@ namespace TFSWorkItemQueryService.Repository
     public interface IMacro
     {
         string GetValue();
-        string Name { get; set; }
+        string Name { get; }
     }
 }

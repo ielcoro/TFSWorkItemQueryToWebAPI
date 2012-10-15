@@ -17,11 +17,7 @@ namespace TFSWorkItemQueryService.Repository
         {
             get
             {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
+                return "Project";
             }
         }
     }
