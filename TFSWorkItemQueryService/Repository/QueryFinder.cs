@@ -17,7 +17,25 @@ namespace TFSWorkItemQueryService.Repository
         
         public QueryDefinition FindQuery(string project, string queryPath, string queryName)
         {
-            throw new NotImplementedException();
+            if (!this.tfsContext.CurrentWorkItemStore.Projects.Contains(project)) throw new ArgumentException("Project: " + project + " does not exist", "project");
+
+            Project currentProject = this.tfsContext.CurrentWorkItemStore.Projects[project];
+
+            return GetQuery(queryPath, queryName, currentProject.QueryHierarchy) as QueryDefinition;
+        }
+
+        private QueryItem GetQuery(string path, string name, IEnumerable<QueryItem> queryItems)
+        {
+            if (queryItems.Where(x => x.Name == name).Count() == 1)
+                return queryItems.Where(x => x.Name == name).Single();
+            else
+            {
+                var nextNode = (from q in queryItems.OfType<QueryFolder>()
+                                where path.Contains(q.Path)
+                                select q).SingleOrDefault();
+
+                return GetQuery(path, name, nextNode);
+            }
         }
     }
 }

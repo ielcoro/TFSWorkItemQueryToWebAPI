@@ -67,6 +67,8 @@ namespace UnitTests.Fakes
             var projectCollectionFake = new ShimProjectCollection();
 
             projectCollectionFake.Bind(projectList);
+            projectCollectionFake.ContainsString = (x) => projectList.Select(p => p.Name).Contains(x);
+            projectCollectionFake.ItemGetString = (x) => projectList.FirstOrDefault(p => p.Name == x);
 
             workItemStoreFake.ProjectsGet = () => projectCollectionFake;
         }
@@ -85,15 +87,18 @@ namespace UnitTests.Fakes
             queryFolderFake = SetupQueryFolderFake(queryFolderFake, queryList);
 
             hierarchyFake.Bind(new List<QueryFolder>() { queryFolderFake });
+            projectFake.QueryHierarchyGet = () => hierarchyFake;
         }
 
         private ShimQueryFolder SetupQueryFolderFake(ShimQueryFolder queryFolderFake, List<QueryDefinition> queryList)
         {
             queryFolderFake.Bind(queryList);
-
+            
             var queryFolderBaseFake = new ShimQueryItem(queryFolderFake);
             queryFolderBaseFake.NameGet = () => "TestFolder";
             queryFolderBaseFake.ProjectGet = () => projectFake;
+            queryFolderBaseFake.PathGet = () => "TestFolder";
+
             return queryFolderFake;
         }
 
