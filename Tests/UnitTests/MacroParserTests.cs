@@ -13,6 +13,26 @@ namespace UnitTests
     [TestClass]
     public class MacroParserTests
     {
+        IMacro projectMacroMock;
+        IMacro userMacroMock;
+        MacroParser parserWithMacros;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            projectMacroMock = A.Fake<IMacro>();
+
+            A.CallTo(() => projectMacroMock.Name).Returns("Project");
+            A.CallTo(() => projectMacroMock.GetValue()).Returns("\"TestProject\"");
+
+            userMacroMock = A.Fake<IMacro>();
+
+            A.CallTo(() => userMacroMock.Name).Returns("Me");
+            A.CallTo(() => userMacroMock.GetValue()).Returns("\"Iñaki Elcoro\"");
+
+            parserWithMacros = new MacroParser(new IMacro[] { projectMacroMock, userMacroMock });
+        }
+
         [TestMethod]
         public void AllMacrosMustHaveAName()
         {
@@ -55,19 +75,13 @@ namespace UnitTests
 
             string expectedQuery = "SELECT System.ID, System.Title from workitems WHERE Project = \"TestProject\"";
 
-            var macroMock = A.Fake<IMacro>();
-
-            A.CallTo(() => macroMock.Name).Returns("Project");
-            A.CallTo(() => macroMock.GetValue()).Returns("\"TestProject\"");
-
             //Act
-            var parser = new MacroParser(new List<IMacro>() { macroMock });
-
-            QueryDefinition parsedQuery = parser.Replace(queryDefinition);
+            QueryDefinition parsedQuery = parserWithMacros.Replace(queryDefinition);
 
             //Assert
-            A.CallTo(() => macroMock.GetValue()).MustHaveHappened();
-            A.CallTo(() => macroMock.Name).MustHaveHappened();
+            A.CallTo(() => projectMacroMock.GetValue()).MustHaveHappened();
+            A.CallTo(() => projectMacroMock.Name).MustHaveHappened();
+
             Assert.AreEqual(expectedQuery, parsedQuery.QueryText);
 
         }
@@ -81,20 +95,8 @@ namespace UnitTests
 
             string expectedQuery = "SELECT System.ID, System.Title from workitems WHERE Project = \"TestProject\" AND CreatedBy = \"Iñaki Elcoro\"";
 
-            var projectMacroMock = A.Fake<IMacro>();
-
-            A.CallTo(() => projectMacroMock.Name).Returns("Project");
-            A.CallTo(() => projectMacroMock.GetValue()).Returns("\"TestProject\"");
-
-            var userMacroMock = A.Fake<IMacro>();
-
-            A.CallTo(() => userMacroMock.Name).Returns("Me");
-            A.CallTo(() => userMacroMock.GetValue()).Returns("\"Iñaki Elcoro\"");
-
             //Act
-            var parser = new MacroParser(new List<IMacro>() { projectMacroMock, userMacroMock });
-
-            QueryDefinition parsedQuery = parser.Replace(queryDefinition);
+            QueryDefinition parsedQuery = parserWithMacros.Replace(queryDefinition);
 
             //Assert
             A.CallTo(() => projectMacroMock.GetValue()).MustHaveHappened();
