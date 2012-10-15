@@ -17,10 +17,15 @@ namespace UnitTests
         ShimQueryDefinition queryDefinition;
         IDisposable shimContext;
         FakeTfsContext tfsContext;
+        IQueryMacroParser queryMacroParser;
 
         [TestInitialize]
         public void Initialize()
         {
+            queryMacroParser = A.Fake<IQueryMacroParser>();
+
+            SetupQueryMacroParserFake();
+
             shimContext = ShimsContext.Create();
 
             tfsContext = new FakeTfsContext(shimContext);
@@ -28,6 +33,12 @@ namespace UnitTests
             queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
 
             SetupQueryShim(tfsContext);
+        }
+
+        private void SetupQueryMacroParserFake()
+        {
+            A.CallTo(() => queryMacroParser.Replace(A<QueryDefinition>.Ignored))
+                                           .ReturnsLazily((x) => x.Arguments.Cast<QueryDefinition>().First()); ;
         }
 
         /// <summary>
@@ -79,11 +90,11 @@ namespace UnitTests
         public void QueryRunFromQueryDefinitonShouldCallContext()
         {
             var tfsContextMock = A.Fake<ITfsContext>(x => x.Wrapping(tfsContext));
-            var queryMacroParser = A.Fake<IQueryMacroParser>();
-
             var queryRunner = new QueryRunner(tfsContextMock, queryMacroParser);
 
-            IEnumerable<WorkItem> workItems = queryRunner.RunQuery(queryDefinition);
+            //ShimQuery.AllInstances.IsLinkQueryGet = (q) => true;
+
+            queryRunner.RunQuery(this.queryDefinition);
 
             A.CallTo(() => tfsContextMock.CurrentWorkItemStore).MustHaveHappened();
         }
@@ -94,7 +105,6 @@ namespace UnitTests
             var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContext));
 
             ShimQuery.AllInstances.IsLinkQueryGet = (q) => true;
-            var queryMacroParser = A.Fake<IQueryMacroParser>();
 
             var queryRunner = new QueryRunner(tfsContextMock, queryMacroParser);
 
@@ -109,7 +119,6 @@ namespace UnitTests
         public void QueryRunShouldRunStandardQueries()
         {
             var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContext));
-            var queryMacroParser = A.Fake<IQueryMacroParser>();
 
             var queryRunner = new QueryRunner(tfsContextMock, queryMacroParser);
 
