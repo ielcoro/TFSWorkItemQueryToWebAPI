@@ -9,6 +9,7 @@ namespace TFSWorkItemQueryService.Repository
     public class ProjectMacro
         : Macro
     {
+        private const string SimpleQuote = "\"";
         private ITfsContext tfsContext;
 
         public ProjectMacro(ITfsContext tfsContext)
@@ -19,7 +20,7 @@ namespace TFSWorkItemQueryService.Repository
         
         public override string GetValue(QueryDefinition definition)
         {
-            return tfsContext.CurrentProject;
+            return String.Format("{0}{1}{0}", SimpleQuote, definition.Project.Name);
         }
     }
 }

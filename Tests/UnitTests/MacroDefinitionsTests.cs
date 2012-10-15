@@ -1,5 +1,6 @@
 ﻿using FakeItEasy;
 using Microsoft.QualityTools.Testing.Fakes;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -16,13 +17,14 @@ namespace UnitTests
     {
         ITfsContext tfsContextMock;
         IDisposable shimContext;
+        ShimProject projectShim;
 
         [TestInitialize]
         public void Initialize()
         {
             shimContext = ShimsContext.Create();
 
-            var projectShim = new ShimProject();
+            projectShim = new ShimProject();
 
             projectShim.NameGet = () => "TestProject";
 
@@ -48,16 +50,34 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void ProjectMacroDefinitionShouldGetValueFromContext()
+        public void ProjectMacroDefinitionShouldGetValueFromQueryDefinition()
         {
             //Arrange
             var projectMacro = new ProjectMacro(tfsContextMock);
+            bool projectGetterWasCalled = false;
+            bool projectNameWasCalled = false;
+
+            ShimQueryItem.AllInstances.ProjectGet = (q) =>
+            {
+                projectGetterWasCalled = true;
+                return projectShim;
+            };
+
+            string projectName = projectShim.Instance.Name;
+
+            projectShim.NameGet = () => 
+            {
+                projectNameWasCalled = true;
+                return projectName;
+            };
+
             //Act
             string value = projectMacro.GetValue(new ShimQueryDefinition());
 
             //Assert
 
-            A.CallTo(() => tfsContextMock.CurrentProject).MustHaveHappened();
+            Assert.IsTrue(projectGetterWasCalled, "Property accessor Project on QueryDefinition was not called");
+            Assert.IsTrue(projectNameWasCalled, "Property accessor Name on Project was not called");
             Assert.AreEqual("\"TestProject\"", value);
         }
 
