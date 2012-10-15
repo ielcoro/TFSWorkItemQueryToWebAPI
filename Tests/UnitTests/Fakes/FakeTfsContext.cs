@@ -13,31 +13,102 @@ namespace UnitTests.Fakes
     {
         private List<WorkItem> workItems;
 
-        private ShimWorkItemStore workItemStore;
+        private ShimWorkItemStore workItemStoreFake;
+
+        private ShimProject projectFake;
+
+        private ShimQueryHierarchy hierarchyFake;
 
         public FakeTfsContext(IDisposable shimsContext)
         {
             if (shimsContext == null) throw new ArgumentNullException();
 
             this.workItems = new List<WorkItem>();
-            workItemStore = new ShimWorkItemStore();
+            workItemStoreFake = new ShimWorkItemStore();
 
-            workItemStore.GetWorkItemInt32 = (id) => workItems.Where(w => w.Id == id).SingleOrDefault();
+            workItemStoreFake.GetWorkItemInt32 = (id) => workItems.Where(w => w.Id == id).SingleOrDefault();
+
+            CreateProjectCollectionFake();
+
+            CreateQueryHierarchyFake();
         }
 
         public WorkItemStore CurrentWorkItemStore
         {
-            get { return workItemStore; }
+            get { return workItemStoreFake; }
         }
 
-        public string CurrentProject { get { return "\"TestProject\""; } }
+        public string CurrentUser { get { return "Iñaki Elcoro"; } }
 
-        public string CurrentUser { get { return "\"Iñaki Elcoro\""; } }
+        #region Fake Tools
 
         public void AddWorkItem(WorkItem workItem)
         {
             this.workItems.Add(workItem);
         }
+
+        public Project GetCurrentProject()
+        {
+            return projectFake;
+        }
+
+        public QueryHierarchy GetHierarchy()
+        {
+            return hierarchyFake;
+        }
+
+        private void CreateProjectCollectionFake()
+        {
+            projectFake = new ShimProject();
+            projectFake.NameGet = () => "TestProject";
+
+            var projectList = new List<Project>() { projectFake };
+
+            var projectCollectionFake = new ShimProjectCollection();
+
+            projectCollectionFake.Bind(projectList);
+
+            workItemStoreFake.ProjectsGet = () => projectCollectionFake;
+        }
+
+        private void CreateQueryHierarchyFake()
+        {
+            hierarchyFake = new ShimQueryHierarchy();
+
+            var queryDefinitionFake = new ShimQueryDefinition();
+
+            queryDefinitionFake.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
+
+            var queryList = CreateQueryDefinitionList(queryDefinitionFake);
+
+            var queryFolderFake = CreateQueryFolderFake(queryList);
+
+            hierarchyFake.Bind(new List<QueryFolder>() { queryFolderFake });
+        }
+
+        private ShimQueryFolder CreateQueryFolderFake(List<QueryDefinition> queryList)
+        {
+            var queryFolderFake = new ShimQueryFolder();
+            queryFolderFake.Bind(queryList);
+
+            var queryFolderBaseFake = new ShimQueryItem(queryFolderFake);
+            queryFolderBaseFake.NameGet = () => "TestFolder";
+            queryFolderBaseFake.ProjectGet = () => projectFake;
+            return queryFolderFake;
+        }
+
+        private List<QueryDefinition> CreateQueryDefinitionList(ShimQueryDefinition queryDefinitionFake)
+        {
+            var queryDefinitionBaseFake = new ShimQueryItem(queryDefinitionFake);
+
+            queryDefinitionBaseFake.NameGet = () => "TestQuery";
+            queryDefinitionBaseFake.ProjectGet = () => projectFake;
+
+            var queryList = new List<QueryDefinition>() { queryDefinitionFake };
+            return queryList;
+        }
+
+        #endregion
 
     }
 }

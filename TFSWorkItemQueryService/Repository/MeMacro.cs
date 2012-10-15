@@ -19,7 +19,7 @@ namespace TFSWorkItemQueryService.Repository
 
         public override string GetValue(QueryDefinition definition)
         {
-            return this.tfsContext.CurrentUser;
+            return String.Format("\"{0}\"", this.tfsContext.CurrentUser);
         }
     }
 }
