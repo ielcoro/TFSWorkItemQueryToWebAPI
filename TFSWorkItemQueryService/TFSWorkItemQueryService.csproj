@@ -125,6 +125,7 @@
     <Compile Include="Repository\ITfsContext.cs" />
     <Compile Include="Repository\Macro.cs" />
     <Compile Include="Repository\MacroParser.cs" />
+    <Compile Include="Repository\ProjectMacro.cs" />
     <Compile Include="Repository\QueryRunner.cs" />
     <Compile Include="Repository\TFSRepository.cs" />
   </ItemGroup>
