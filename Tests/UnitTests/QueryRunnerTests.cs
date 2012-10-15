@@ -31,7 +31,7 @@ namespace UnitTests
             tfsContext = new FakeTfsContext(shimContext);
             queryDefinition = new ShimQueryDefinition();
             queryDefinition.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
-
+            
             SetupQueryShim(tfsContext);
         }
 

@@ -1,5 +1,6 @@
 ﻿using FakeItEasy;
 using Microsoft.QualityTools.Testing.Fakes;
+using Microsoft.TeamFoundation.WorkItemTracking.Client.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -14,15 +15,28 @@ namespace UnitTests
     public class MacroDefinitionsTests
     {
         ITfsContext tfsContextMock;
+        IDisposable shimContext;
 
         [TestInitialize]
         public void Initialize()
         {
-            var shimContext = ShimsContext.Create();
+            shimContext = ShimsContext.Create();
+
+            var projectShim = new ShimProject();
+
+            projectShim.NameGet = () => "TestProject";
+
+            ShimQueryItem.AllInstances.ProjectGet = q => projectShim;
 
             var tfsContextInstance = new FakeTfsContext(shimContext);
 
             tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContextInstance));
+        }
+
+        [TestCleanup]
+        public void CleanUp()
+        {
+            shimContext.Dispose();
         }
 
         [TestMethod]
@@ -39,7 +53,7 @@ namespace UnitTests
             //Arrange
             var projectMacro = new ProjectMacro(tfsContextMock);
             //Act
-            string value = projectMacro.GetValue();
+            string value = projectMacro.GetValue(new ShimQueryDefinition());
 
             //Assert
 
@@ -62,7 +76,7 @@ namespace UnitTests
             var userMacro = new MeMacro(tfsContextMock);
 
             //Act
-            string value = userMacro.GetValue();
+            string value = userMacro.GetValue(new ShimQueryDefinition());
 
             //Assert
 

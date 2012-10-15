@@ -82,6 +82,7 @@
     <Compile Include="Fakes\FakeTfsContext.cs" />
     <Compile Include="MacroDefinitionsTests.cs" />
     <Compile Include="MacroParserTests.cs" />
+    <Compile Include="QueryFinderTests.cs" />
     <Compile Include="TfsRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryRunnerTests.cs" />

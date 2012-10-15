@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace TFSWorkItemQueryService.Repository
 {
-    public class Macro : IMacro
+    public abstract class Macro : IMacro
     {
         public Macro (string name)
 	    {
@@ -15,9 +16,7 @@ namespace TFSWorkItemQueryService.Repository
 
         public string Name { get; set; }
 
-        public string GetValue()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract string GetValue(QueryDefinition definition);
+        
     }
 }

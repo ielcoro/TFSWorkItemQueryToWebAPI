@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,26 +7,19 @@ using System.Text;
 namespace TFSWorkItemQueryService.Repository
 {
     public class ProjectMacro
-        : IMacro
+        : Macro
     {
         private ITfsContext tfsContext;
 
         public ProjectMacro(ITfsContext tfsContext)
+            : base("Project")
         {
             this.tfsContext = tfsContext;
         }
         
-        public string GetValue()
+        public override string GetValue(QueryDefinition definition)
         {
             return tfsContext.CurrentProject;
-        }
-
-        public string Name
-        {
-            get
-            {
-                return "Project";
-            }
         }
     }
 }

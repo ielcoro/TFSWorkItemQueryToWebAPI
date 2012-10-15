@@ -21,7 +21,7 @@ namespace TFSWorkItemQueryService.Repository
 
             foreach (var macro in macros)
             {
-                queryText = queryText.Replace("@" + macro.Name, macro.GetValue());
+                queryText = queryText.Replace("@" + macro.Name, macro.GetValue(definition));
             }
 
             return new QueryDefinition(definition.Name, queryText);
