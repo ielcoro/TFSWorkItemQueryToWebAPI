@@ -50,16 +50,16 @@ namespace UnitTests
         [TestMethod]
         public void UserMacroDefinitionShouldSetMacroName()
         {
-            var userMacro = new UserMacro(A.Dummy<ITfsContext>());
+            var userMacro = new MeMacro(A.Dummy<ITfsContext>());
 
-            Assert.AreEqual("User", userMacro.Name);
+            Assert.AreEqual("Me", userMacro.Name);
         }
 
         [TestMethod]
         public void UserMacroDefinitionShouldGetValueFromContext()
         {
             //Arrange
-            var userMacro = new UserMacro(tfsContextMock);
+            var userMacro = new MeMacro(tfsContextMock);
 
             //Act
             string value = userMacro.GetValue();

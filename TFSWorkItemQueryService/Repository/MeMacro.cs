@@ -5,17 +5,17 @@ using System.Text;
 
 namespace TFSWorkItemQueryService.Repository
 {
-    public class UserMacro
+    public class MeMacro
         : IMacro
     {
         private ITfsContext tfsContext;
 
-        public UserMacro(ITfsContext tfsContext)
+        public MeMacro(ITfsContext tfsContext)
         {
             this.tfsContext = tfsContext;
         }
 
-        public string Name { get { return "User"; } }
+        public string Name { get { return "Me"; } }
 
         public string GetValue()
         {

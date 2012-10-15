@@ -128,7 +128,7 @@
     <Compile Include="Repository\ProjectMacro.cs" />
     <Compile Include="Repository\QueryRunner.cs" />
     <Compile Include="Repository\TFSRepository.cs" />
-    <Compile Include="Repository\UserMacro.cs" />
+    <Compile Include="Repository\MeMacro.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
