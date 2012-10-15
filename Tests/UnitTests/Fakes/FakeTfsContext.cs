@@ -75,20 +75,20 @@ namespace UnitTests.Fakes
         {
             hierarchyFake = new ShimQueryHierarchy();
 
+            var queryFolderFake = new ShimQueryFolder();
             var queryDefinitionFake = new ShimQueryDefinition();
-
+            
             queryDefinitionFake.QueryTextGet = () => "SELECT System.ID, System.Title from workitems";
+            
+            var queryList = CreateQueryDefinitionList(queryFolderFake, queryDefinitionFake);
 
-            var queryList = CreateQueryDefinitionList(queryDefinitionFake);
-
-            var queryFolderFake = CreateQueryFolderFake(queryList);
+            queryFolderFake = SetupQueryFolderFake(queryFolderFake, queryList);
 
             hierarchyFake.Bind(new List<QueryFolder>() { queryFolderFake });
         }
 
-        private ShimQueryFolder CreateQueryFolderFake(List<QueryDefinition> queryList)
+        private ShimQueryFolder SetupQueryFolderFake(ShimQueryFolder queryFolderFake, List<QueryDefinition> queryList)
         {
-            var queryFolderFake = new ShimQueryFolder();
             queryFolderFake.Bind(queryList);
 
             var queryFolderBaseFake = new ShimQueryItem(queryFolderFake);
@@ -97,12 +97,13 @@ namespace UnitTests.Fakes
             return queryFolderFake;
         }
 
-        private List<QueryDefinition> CreateQueryDefinitionList(ShimQueryDefinition queryDefinitionFake)
+        private List<QueryDefinition> CreateQueryDefinitionList(ShimQueryFolder parent,  ShimQueryDefinition queryDefinitionFake)
         {
             var queryDefinitionBaseFake = new ShimQueryItem(queryDefinitionFake);
 
             queryDefinitionBaseFake.NameGet = () => "TestQuery";
             queryDefinitionBaseFake.ProjectGet = () => projectFake;
+            queryDefinitionBaseFake.ParentGet = () => parent;
 
             var queryList = new List<QueryDefinition>() { queryDefinitionFake };
             return queryList;
