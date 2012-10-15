@@ -5,27 +5,22 @@ using System.Text;
 
 namespace TFSWorkItemQueryService.Repository
 {
-    public class ProjectMacro
+    public class UserMacro
         : IMacro
     {
         private ITfsContext tfsContext;
 
-        public ProjectMacro(ITfsContext tfsContext)
+        public UserMacro(ITfsContext tfsContext)
         {
             this.tfsContext = tfsContext;
         }
-        
+
+        public string Name { get { return "User"; } }
+
         public string GetValue()
         {
-            return tfsContext.CurrentProject;
+            throw new NotImplementedException();
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Project";
-            }
-        }
     }
 }

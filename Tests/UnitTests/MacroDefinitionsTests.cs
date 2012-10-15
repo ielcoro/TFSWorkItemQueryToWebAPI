@@ -16,7 +16,7 @@ namespace UnitTests
         [TestMethod]
         public void ProjectMacroDefinitionShouldSetMacroName()
         {
-            var projectMacro = new ProjectMacro();
+            var projectMacro = new ProjectMacro(A.Dummy<ITfsContext>());
 
             Assert.AreEqual("Project", projectMacro.Name);
         }
@@ -32,7 +32,7 @@ namespace UnitTests
             var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContextInstance));
 
             //Act
-            var projectMacro = new ProjectMacro();
+            var projectMacro = new ProjectMacro(tfsContextMock);
 
             string value = projectMacro.GetValue();
 
@@ -40,6 +40,35 @@ namespace UnitTests
 
             A.CallTo(() => tfsContextMock.CurrentProject).MustHaveHappened();
             Assert.AreEqual("\"TestProject\"", value);
+        }
+
+        [TestMethod]
+        public void UserMacroDefinitionShouldSetMacroName()
+        {
+            var userMacro = new UserMacro(A.Dummy<ITfsContext>());
+
+            Assert.AreEqual("User", userMacro.Name);
+        }
+
+        [TestMethod]
+        public void UserMacroDefinitionShouldGetValueFromContext()
+        {
+            //Arrange
+            var shimContext = ShimsContext.Create();
+
+            var tfsContextInstance = new FakeTfsContext(shimContext);
+
+            var tfsContextMock = A.Fake<ITfsContext>(o => o.Wrapping(tfsContextInstance));
+
+            //Act
+            var userMacro = new UserMacro(tfsContextMock);
+
+            string value = userMacro.GetValue();
+
+            //Assert
+
+            A.CallTo(() => tfsContextMock.CurrentProject).MustHaveHappened();
+            Assert.AreEqual("\"Iñaki Elcoro\"", value);
         }
 
     }
