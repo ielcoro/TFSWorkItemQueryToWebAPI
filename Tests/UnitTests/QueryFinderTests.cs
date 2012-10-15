@@ -1,5 +1,6 @@
 ﻿using FakeItEasy;
 using Microsoft.QualityTools.Testing.Fakes;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -14,15 +15,14 @@ namespace UnitTests
     public class QueryFinderTests
     {
         IDisposable shimsContext;
-        ITfsContext tfsContextMock;
+        FakeTfsContext fakeTfsContext;
 
         [TestInitialize]
         public void Initialize()
         {
             shimsContext = ShimsContext.Create();
 
-            var tfsContext = new FakeTfsContext(shimsContext);
-            tfsContextMock = A.Fake<ITfsContext>((o) => o.Wrapping(tfsContext));
+            fakeTfsContext = new FakeTfsContext(shimsContext);
         }
 
         [TestCleanup]
@@ -32,13 +32,18 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void QueryFinderLooksForQueryUsingCurrentContext()
+        public void QueryFinderReturnsQueryNavigatingFoldersInsideHierarchy()
         {
-            var finder = new QueryFinder(tfsContextMock);
+            string expectedQuery = "SELECT System.ID, System.Title from workitems";
+            string expectedQueryName = "TestQuery";
+            string expectedQueryFolderName = "TestFolder";
 
-            finder.FindQuery("TestProject", "/", "testQuery");
+            var finder = new QueryFinder(fakeTfsContext);
+            QueryDefinition actual = finder.FindQuery("TestProject", "TestFolder", "TestQuery");
 
-            
+            Assert.AreEqual(expectedQuery, actual.QueryText);
+            Assert.AreEqual(expectedQueryName, actual.Name);
+            Assert.AreEqual(expectedQueryFolderName, actual.Parent.Name);
         }   
     }
 }
