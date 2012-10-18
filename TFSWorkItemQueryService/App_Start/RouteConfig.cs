@@ -14,6 +14,11 @@ namespace TFSWorkItemQueryService
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //routes.MapHttpRoute(
+            //    name: "RunQuery",
+            //    routeTemplate: "api/{controller}/{action}/{teamProject}/{path}/{queryName}"
+            //);
+
             routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using TFSWorkItemQueryService.Repository;
 
 
@@ -11,40 +12,17 @@ namespace TFSWorkItemQueryService.Controllers
 {
     public class QueryController : ApiController
     {
+        TFSRepository repository;
+
         public QueryController(TFSRepository repository)
         {
-
-        }
-        // GET api/query
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
+            this.repository = repository;
         }
 
-        // GET api/query/5
-        public string Get(int id)
+        [HttpGet]
+        public IEnumerable<WorkItem> Run(string teamProject, string path, string queryName)
         {
-            return "value";
-        }
-
-        // POST api/query
-        public void Post(string value)
-        {
-        }
-
-        // PUT api/query/5
-        public void Put(int id, string value)
-        {
-        }
-
-        // DELETE api/query/5
-        public void Delete(int id)
-        {
-        }
-
-        public IEnumerable<Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItem> Run(string p1, string p2, string p3)
-        {
-            throw new NotImplementedException();
+            return repository.Run(teamProject, path, queryName);
         }
     }
 }

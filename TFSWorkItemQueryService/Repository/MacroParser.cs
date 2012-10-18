@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TFSWorkItemQueryService.Repository
 {
@@ -22,6 +23,7 @@ namespace TFSWorkItemQueryService.Repository
             foreach (var macro in Macros)
             {
                 queryText = queryText.Replace("@" + macro.Name, macro.GetValue(definition));
+                queryText = Regex.Replace(queryText, "@" + macro.Name, macro.GetValue(definition),RegexOptions.IgnoreCase);
             }
 
             return new QueryDefinition(definition.Name, queryText);

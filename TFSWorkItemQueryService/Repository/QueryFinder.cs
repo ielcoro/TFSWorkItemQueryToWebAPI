@@ -28,7 +28,7 @@ namespace TFSWorkItemQueryService.Repository
 
         private QueryItem GetQuery(string path, string name, IEnumerable<QueryItem> queryItems)
         {
-            if (queryItems.Where(x => x.Name == name).Count() == 1)
+            if (queryItems.Where(x => x.Name == name && x.Path.Contains(path)).Count() == 1)
                 return queryItems.Where(x => x.Name == name).Single();
             else
             {

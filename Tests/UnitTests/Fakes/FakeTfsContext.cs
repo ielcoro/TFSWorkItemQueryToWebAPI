@@ -109,6 +109,7 @@ namespace UnitTests.Fakes
             queryDefinitionBaseFake.NameGet = () => "TestQuery";
             queryDefinitionBaseFake.ProjectGet = () => projectFake;
             queryDefinitionBaseFake.ParentGet = () => parent;
+            queryDefinitionBaseFake.PathGet = () => "TestProject/TestFolder";
 
             var queryList = new List<QueryDefinition>() { queryDefinitionFake };
             return queryList;

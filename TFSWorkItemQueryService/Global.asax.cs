@@ -19,7 +19,9 @@ namespace TFSWorkItemQueryService
             AreaRegistration.RegisterAllAreas();
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            
         }
     }
 }

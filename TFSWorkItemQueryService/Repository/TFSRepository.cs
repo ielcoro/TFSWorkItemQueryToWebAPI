@@ -22,7 +22,7 @@ namespace TFSWorkItemQueryService.Repository
         {
             QueryDefinition queryDefinition = queryFinder.FindQuery(project, queryPath, queryName);
 
-            return queryRunner.RunQuery(null);
+            return queryRunner.RunQuery(queryDefinition);
         }
     }
 }

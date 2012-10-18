@@ -7,6 +7,9 @@ using TFSWorkItemQueryService.Repository;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using System.Net.Http;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace IntegrationTests
 {
@@ -43,19 +46,31 @@ namespace IntegrationTests
         {
             var expectedWorkItems = new List<string>()
             {
-                "Proteger con contraseña el directio de distribución de ClickOnce",
+                "Proteger con contraseña el directorio de distribución de ClickOnce",
                 "Clon del repositorio en srvdesarrollo",
                 "Crear manual de instalación",
                 "Crear manual de usuario", 
-                "Envio de E-mail al generar el pedido",
+                "Envio de E-mail al generar pedido",
                 "Vaciar el carrito de la compra",
                 "Cambio de Contraseña"
             };
+
             var queryController = Bootstrapper.Container.Resolve<QueryController>();
 
             IEnumerable<WorkItem> workItems = queryController.Run("EquipoIE", "Shared Queries/Erka - Extranet Clientes/", "Product Backlog");
 
             CollectionAssert.AreEqual(workItems.Select(x => x.Title).ToList(), expectedWorkItems);
+        }
+
+        [TestMethod]
+        public async Task TestRunQueryFromClientSide()
+        {
+            var client = new HttpClient();
+
+            var path = WebUtility.UrlEncode("Shared Queries/Erka - Extranet Clientes/");
+            var name = WebUtility.UrlEncode("Product Backlog");
+
+            string xml = await client.GetStringAsync(String.Format("http://localhost:8035/api/query/run?teamProject={0}&path={1}&queryName={2}", "EquipoIE", path, name));
         }
     }
 }
