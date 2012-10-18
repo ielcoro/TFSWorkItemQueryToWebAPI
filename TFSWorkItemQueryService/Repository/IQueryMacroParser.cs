@@ -9,5 +9,6 @@ namespace TFSWorkItemQueryService.Repository
     public interface IQueryMacroParser
     {
         QueryDefinition Replace(QueryDefinition definition);
+        IEnumerable<IMacro> Macros { get; }
     }
 }

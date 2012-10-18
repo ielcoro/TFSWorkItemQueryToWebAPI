@@ -8,18 +8,18 @@ namespace TFSWorkItemQueryService.Repository
 {
     public class MacroParser : IQueryMacroParser
     {
-        IEnumerable<IMacro> macros;
+        public IEnumerable<IMacro> Macros { get; private set; }
 
         public MacroParser(IEnumerable<IMacro> macros)
         {
-            this.macros = macros;
+            this.Macros = macros;
         }
 
         public QueryDefinition Replace(QueryDefinition definition)
         {
             string queryText = definition.QueryText;
 
-            foreach (var macro in macros)
+            foreach (var macro in Macros)
             {
                 queryText = queryText.Replace("@" + macro.Name, macro.GetValue(definition));
             }
