@@ -41,5 +41,10 @@ namespace TFSWorkItemQueryService.Controllers
         public void Delete(int id)
         {
         }
+
+        public IEnumerable<Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItem> Run(string p1, string p2, string p3)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

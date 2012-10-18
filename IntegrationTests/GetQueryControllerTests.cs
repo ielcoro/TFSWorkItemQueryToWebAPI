@@ -5,17 +5,23 @@ using TFSWorkItemQueryService.Controllers;
 using Microsoft.Practices.Unity;
 using TFSWorkItemQueryService.Repository;
 using System.Linq;
+using System.Collections.Generic;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace IntegrationTests
 {
     [TestClass]
     public class RunQueryControllerTests
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Bootstrapper.Initialise();
+        }
+
         [TestMethod]
         public void UnityInitializesRunQueryController()
         {
-            Bootstrapper.Initialise();
-
             var queryController = Bootstrapper.Container.Resolve<QueryController>();
 
             Assert.IsNotNull(queryController);
@@ -24,8 +30,6 @@ namespace IntegrationTests
         [TestMethod]
         public void UnityInitializesMacroList()
         {
-            Bootstrapper.Initialise();
-
             var macroParser = Bootstrapper.Container.Resolve<IQueryMacroParser>();
 
             Assert.IsNotNull(macroParser);
@@ -37,7 +41,21 @@ namespace IntegrationTests
         [TestMethod]
         public void RunQueryControllerTestReturnsWorkItems()
         {
-            Assert.Fail("Not Tested");    
+            var expectedWorkItems = new List<string>()
+            {
+                "Proteger con contraseña el directio de distribución de ClickOnce",
+                "Clon del repositorio en srvdesarrollo",
+                "Crear manual de instalación",
+                "Crear manual de usuario", 
+                "Envio de E-mail al generar el pedido",
+                "Vaciar el carrito de la compra",
+                "Cambio de Contraseña"
+            };
+            var queryController = Bootstrapper.Container.Resolve<QueryController>();
+
+            IEnumerable<WorkItem> workItems = queryController.Run("EquipoIE", "Shared Queries/Erka - Extranet Clientes/", "Product Backlog");
+
+            CollectionAssert.AreEqual(workItems.Select(x => x.Title).ToList(), expectedWorkItems);
         }
     }
 }
