@@ -4,11 +4,17 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using TFSWorkItemQueryService.Repository;
+
 
 namespace TFSWorkItemQueryService.Controllers
 {
     public class QueryController : ApiController
     {
+        public QueryController(TFSRepository repository)
+        {
+
+        }
         // GET api/query
         public IEnumerable<string> Get()
         {

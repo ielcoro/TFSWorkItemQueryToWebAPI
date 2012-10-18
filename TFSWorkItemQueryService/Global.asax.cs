@@ -14,6 +14,8 @@ namespace TFSWorkItemQueryService
     {
         protected void Application_Start()
         {
+            Bootstrapper.Initialise();
+
             AreaRegistration.RegisterAllAreas();
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

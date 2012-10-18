@@ -1,5 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TFSWorkItemQueryService;
+using TFSWorkItemQueryService.Controllers;
+using Microsoft.Practices.Unity;
 
 namespace IntegrationTests
 {
@@ -7,9 +10,19 @@ namespace IntegrationTests
     public class RunQueryControllerTests
     {
         [TestMethod]
-        public void RunQueryControllerTestReturnsWorkItemsInXML()
+        public void UnityInitializesRunQueryController()
         {
-            Assert.Fail("Not implemented");
+            Bootstrapper.Initialise();
+
+            var queryController = Bootstrapper.Container.Resolve<QueryController>();
+
+            Assert.IsNotNull(queryController);
+        }
+
+        [TestMethod]
+        public void RunQueryControllerTestReturnsWorkItems()
+        {
+            Assert.Fail("Not Tested");    
         }
     }
 }
