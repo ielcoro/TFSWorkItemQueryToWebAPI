@@ -43,6 +43,7 @@
     <Reference Include="FakeItEasy">
       <HintPath>..\..\packages\FakeItEasy.1.7.4626.65\lib\NET40\FakeItEasy.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.TeamFoundation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.TeamFoundation.11.0.0.0.Fakes">
@@ -87,6 +88,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryRunnerTests.cs" />
     <Compile Include="ExtAssert.cs" />
+    <Compile Include="WorkItemSerializationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Fakes Include="Fakes\Microsoft.TeamFoundation.fakes" />
