@@ -1,6 +1,7 @@
 ## My settings
 
 Tests/TFSApiTests/app.config
+IntegrationTests/app.config
 
 #################
 ## Eclipse

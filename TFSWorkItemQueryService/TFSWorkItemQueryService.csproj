@@ -130,6 +130,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Repository\IMacro.cs" />
     <Compile Include="Repository\IQueryMacroParser.cs" />
     <Compile Include="Repository\IQueryRunner.cs" />
@@ -141,6 +146,7 @@
     <Compile Include="Repository\ProjectMacro.cs" />
     <Compile Include="Repository\QueryFinder.cs" />
     <Compile Include="Repository\QueryRunner.cs" />
+    <Compile Include="Repository\TfsContext.cs" />
     <Compile Include="Repository\TFSRepository.cs" />
     <Compile Include="Repository\MeMacro.cs" />
   </ItemGroup>
@@ -164,6 +170,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
