@@ -97,7 +97,7 @@ namespace UnitTests.Fakes
             var queryFolderBaseFake = new ShimQueryItem(queryFolderFake);
             queryFolderBaseFake.NameGet = () => "TestFolder";
             queryFolderBaseFake.ProjectGet = () => projectFake;
-            queryFolderBaseFake.PathGet = () => "TestFolder";
+            queryFolderBaseFake.PathGet = () => "TestProject/TestFolder";
 
             return queryFolderFake;
         }

@@ -21,7 +21,9 @@ namespace TFSWorkItemQueryService.Repository
 
             Project currentProject = this.tfsContext.CurrentWorkItemStore.Projects[project];
 
-            return GetQuery(queryPath, queryName, currentProject.QueryHierarchy) as QueryDefinition;
+            string fullQueryPath = project + "/" + queryPath;
+
+            return GetQuery(fullQueryPath, queryName, currentProject.QueryHierarchy) as QueryDefinition;
         }
 
         private QueryItem GetQuery(string path, string name, IEnumerable<QueryItem> queryItems)
